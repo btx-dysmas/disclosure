@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import companies, document, filings, financials, insights, segments, xbrl
+from . import companies, document, filings, financials, insights, search, segments, xbrl
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -28,7 +28,7 @@ def cached(body, seconds: int = 3600):
 
 
 @app.get("/api/search")
-async def search(q: str):
+async def search_companies(q: str):
     return cached(await companies.search(q), 3600)
 
 
@@ -70,6 +70,20 @@ async def company_insights(key: str):
         seg = None
     sic = int((await companies.submissions(cik)).get("sic") or 0)
     return cached(insights.generate(fin, seg, financial=6000 <= sic < 6800), 21600)
+
+
+@app.get("/api/company/{key}/fulltext")
+async def fulltext(key: str, q: str, forms: str = "10-K,10-Q", start: str = "2001-01-01", end: str = "", detail: int = 8):
+    """Filings that mention a phrase, newest first, with excerpts from the top results."""
+    from datetime import date
+
+    cik = await companies.resolve(key)
+    return cached(await search.search(cik, q, forms, start, end or date.today().isoformat(), min(detail, 12)), 3600)
+
+
+@app.get("/api/filing/{key}/{accession}/excerpts")
+async def filing_excerpts(key: str, accession: str, q: str, doc: str):
+    return cached(await search.excerpts(await companies.resolve(key), accession, doc, q, 5), 86400)
 
 
 @app.get("/api/company/{key}/xbrl")

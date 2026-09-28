@@ -120,7 +120,15 @@ export async function render(root, { co, key, arg }) {
   drawFigs();
 
   const jump = params.get("block");
-  if (find.value) search();
+  if (find.value) {
+    search();
+    if (jump && hits.length) {
+      // Start at the match inside the block the excerpt came from.
+      const target = doc.querySelector(`#b${jump}`);
+      const n = hits.findIndex((h) => target && (target.contains(h) || target.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING));
+      if (n > 0) go(n);
+    }
+  }
   else if (jump) doc.querySelector(`#b${jump}`)?.scrollIntoView({ block: "start" });
   else if (params.get("note") === "segment") {
     const n = d.notes.find((x) => x.segment);

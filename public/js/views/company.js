@@ -5,6 +5,7 @@ export const TABS = [
   ["overview", "Overview", () => import("./overview.js")],
   ["filings", "Filings", () => import("./filings.js")],
   ["read", "Reader", () => import("./reader.js")],
+  ["search", "Search", () => import("./search.js")],
   ["segments", "Segments", () => import("./segments.js")],
   ["financials", "Financials", () => import("./financials.js")],
   ["xbrl", "XBRL", () => import("./xbrl.js")],

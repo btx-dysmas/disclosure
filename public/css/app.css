@@ -162,6 +162,16 @@ dl.kv.two { grid-template-columns: max-content 1fr max-content 1fr; }
 .structure h3 { font-size: 12.5px; margin: 6px 0 4px; }
 .structure ol { margin: 0 0 8px; padding-left: 18px; font-size: 12.5px; }
 .structure li { margin-bottom: 2px; }
+.search-head { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line-2); }
+.search-head .tag { margin-left: 6px; }
+.results { list-style: none; margin: 0; padding: 0; }
+.results li { padding: 10px 14px 8px; border-bottom: 1px solid var(--line-2); }
+.results .rh { margin-bottom: 4px; }
+.results .rh .muted { font-size: 12px; margin-left: 6px; }
+.results a.ex { display: block; color: var(--ink-2); padding: 3px 0 3px 10px; border-left: 2px solid var(--line); margin: 4px 0; font-size: 13px; line-height: 1.5; }
+.results a.ex:hover { border-left-color: var(--navy); background: #f8fafc; text-decoration: none; }
+.results mark, .ex mark { background: var(--mark); color: var(--ink); padding: 0 1px; }
+@media (max-width: 900px) { .search-head { grid-template-columns: 1fr; } }
 .insight { padding: 10px 16px 2px; }
 .insight + .insight { border-top: 1px solid var(--line-2); }
 .insight h3 { font-size: 12.5px; color: var(--navy); margin-bottom: 4px; }
