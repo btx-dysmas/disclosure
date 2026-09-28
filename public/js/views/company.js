@@ -13,6 +13,7 @@ export const TABS = [
   ["compare", "Compare", () => import("./compare.js")],
   ["timeline", "Timeline", () => import("./timeline.js")],
   ["insiders", "Insiders", () => import("./insiders.js")],
+  ["ownership", "Ownership", () => import("./ownership.js")],
 ];
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import compare, companies, document, filings, financials, insiders, insights, risk, search, segments, timeline, xbrl
+from . import compare, companies, document, filings, financials, insiders, insights, ownership, risk, search, segments, timeline, xbrl
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -104,6 +104,11 @@ async def compare_filings(key: str, old: str, new: str, section: str = "7"):
 @app.get("/api/company/{key}/insiders")
 async def company_insiders(key: str):
     return cached(await insiders.transactions(await companies.resolve(key)), 3600)
+
+
+@app.get("/api/company/{key}/ownership")
+async def company_ownership(key: str):
+    return cached(await ownership.holders(await companies.resolve(key)), 21600)
 
 
 @app.get("/api/company/{key}/timeline")
