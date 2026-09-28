@@ -56,6 +56,22 @@ def words(a: str, b: str) -> str:
     return "".join(out)
 
 
+def sides(a: str, b: str) -> tuple[str, str]:
+    """Left (old, deletions marked) and right (new, insertions marked) HTML for a side-by-side view."""
+    ta, tb = TOKEN.findall(a), TOKEN.findall(b)
+    sm = SequenceMatcher(None, ta, tb, autojunk=False)
+    left, right = [], []
+    for op, i1, i2, j1, j2 in sm.get_opcodes():
+        old, new = "".join(ta[i1:i2]), "".join(tb[j1:j2])
+        if op == "equal":
+            left.append(_esc(old))
+            right.append(_esc(new))
+            continue
+        left.append(f"<del>{_esc(old)}</del>" if old.strip() else _esc(old))
+        right.append(f"<ins>{_esc(new)}</ins>" if new.strip() else _esc(new))
+    return "".join(left), "".join(right)
+
+
 def paragraphs(a: list[str], b: list[str]) -> list[dict]:
     """Align two lists of paragraphs. Each row is equal, added, removed or changed (with a word diff)."""
     na, nb = [normalize(x) for x in a], [normalize(x) for x in b]
@@ -73,7 +89,9 @@ def paragraphs(a: list[str], b: list[str]) -> list[dict]:
             olds = list(range(i1, i2))
             used: set[int] = set()
             for j in range(j1, j2):
-                best, score = None, 0.5
+                # Short sentences share most of their words by chance ("X revenue increased 9%"),
+                # so they need a closer match to count as the same paragraph.
+                best, score = None, 0.5 if len(b[j].split()) > 25 else 0.72
                 for i in olds:
                     if i in used:
                         continue

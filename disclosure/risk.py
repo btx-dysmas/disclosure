@@ -144,7 +144,7 @@ async def _safe(cik: int, f: dict):
         return None
 
 
-@memoize("risk:compare:v6", DAY * 30)
+@memoize("risk:compare:v7", DAY * 30)
 async def compare(cik: int, old_acc: str, new_acc: str) -> dict:
     lib = await filings.library(cik)
     by_acc = {f["accession"]: f for f in lib["filings"]}

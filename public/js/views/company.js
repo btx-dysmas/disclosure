@@ -10,6 +10,7 @@ export const TABS = [
   ["financials", "Financials", () => import("./financials.js")],
   ["xbrl", "XBRL", () => import("./xbrl.js")],
   ["risks", "Risk factors", () => import("./risk.js")],
+  ["compare", "Compare", () => import("./compare.js")],
 ];
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
