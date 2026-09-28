@@ -12,6 +12,12 @@ from .sec import NotFound, Upstream
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
 
 
+@app.exception_handler(404)
+async def no_route(request: Request, _):
+    # Echo the path the app received: when a host rewrites paths, this shows how.
+    return JSONResponse({"detail": "Not Found", "path": request.url.path}, status_code=404)
+
+
 @app.exception_handler(NotFound)
 async def not_found(_: Request, e: NotFound):
     return JSONResponse({"detail": str(e)}, status_code=404)
