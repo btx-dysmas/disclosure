@@ -17,6 +17,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/app.css">
+  <!-- Fetch the modules every first view needs in parallel instead of one import at a time. -->
+  <link rel="modulepreload" href="/js/app.js">
+  <link rel="modulepreload" href="/js/lib.js">
+  <link rel="modulepreload" href="/js/views/home.js">
+  <link rel="modulepreload" href="/js/views/company.js">
+  <link rel="modulepreload" href="/js/views/overview.js">
+  <link rel="modulepreload" href="/js/views/financials.js">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 </head>
 <body>
   <header class="top">

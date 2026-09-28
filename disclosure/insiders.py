@@ -65,8 +65,8 @@ def parse(xml: bytes, meta: dict) -> list[dict]:
     return out
 
 
-@memoize("insiders:v1", 6 * HOUR)
-async def transactions(cik: int, limit: int = 80) -> dict:
+@memoize("insiders:v2", 6 * HOUR)
+async def transactions(cik: int, limit: int = 40) -> dict:
     rec = (await submissions(cik))["filings"]["recent"]
     idx = [i for i, f in enumerate(rec["form"]) if f in ("4", "4/A")][:limit]
 

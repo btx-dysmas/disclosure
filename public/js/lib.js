@@ -2,7 +2,7 @@
 
 const inflight = new Map();
 
-/** GET a JSON endpoint under /api. Identical concurrent requests share one fetch. */
+/** GET a JSON endpoint under /api. Identical requests share one fetch and its result. */
 export function api(path) {
   if (inflight.has(path)) return inflight.get(path);
   const p = fetch(`/api${path}`).then(async (r) => {
@@ -12,7 +12,8 @@ export function api(path) {
     return body;
   });
   inflight.set(path, p);
-  p.then(() => setTimeout(() => inflight.delete(path), 60_000), () => inflight.delete(path));
+  // Keep answers for five minutes so switching tabs back and forth does not refetch.
+  p.then(() => setTimeout(() => inflight.delete(path), 300_000), () => inflight.delete(path));
   return p;
 }
 
@@ -109,13 +110,14 @@ export function marketStatus(now = new Date()) {
   return { open: false, label: "Market closed" };
 }
 
-/** Load Plotly once, on the first page that draws a chart. */
+/** Load Plotly once, on the first page that draws a chart. The basic build covers bar and line charts,
+ * which is all the site draws, at a quarter of the full bundle's size. */
 let plotly = null;
 export function loadPlotly() {
   if (!plotly) {
     plotly = new Promise((resolve, reject) => {
       const s = document.createElement("script");
-      s.src = "https://cdn.jsdelivr.net/npm/plotly.js-dist-min@3.1.0/plotly.min.js";
+      s.src = "https://cdn.jsdelivr.net/npm/plotly.js-basic-dist-min@3.1.0/plotly-basic.min.js";
       s.onload = () => resolve(window.Plotly);
       s.onerror = () => { plotly = null; reject(new Error("Chart library failed to load")); };
       document.head.appendChild(s);

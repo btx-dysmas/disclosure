@@ -1,6 +1,7 @@
 """FastAPI application: JSON endpoints under /api, and the static front end for local runs."""
 from __future__ import annotations
 
+import asyncio
 import os
 
 from fastapi import FastAPI, Request
@@ -81,13 +82,18 @@ async def company_financials(key: str):
 @app.get("/api/company/{key}/insights")
 async def company_insights(key: str):
     cik = await companies.resolve(key)
+    # Segment data needs three large XBRL downloads the first time. Start it alongside the
+    # statements, but don't hold the summary for it: after a few seconds the summary goes out
+    # without segment points, with a short cache so the next view includes them.
+    seg_task = asyncio.ensure_future(segments.segments(cik))
+    seg_task.add_done_callback(lambda t: t.cancelled() or t.exception())  # a late failure is not an error
     fin = await financials.statements(cik)
     try:
-        seg = await segments.segments(cik)
-    except (NotFound, Upstream):
+        seg = await asyncio.wait_for(asyncio.shield(seg_task), timeout=4)
+    except (NotFound, Upstream, asyncio.TimeoutError):
         seg = None
     sic = int((await companies.submissions(cik)).get("sic") or 0)
-    return cached(insights.generate(fin, seg, financial=6000 <= sic < 6800), 21600)
+    return cached(insights.generate(fin, seg, financial=6000 <= sic < 6800), 21600 if seg else 300)
 
 
 @app.get("/api/company/{key}/fulltext")

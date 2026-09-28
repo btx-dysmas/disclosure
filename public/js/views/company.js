@@ -1,5 +1,5 @@
 // Company page: header, tab strip, and the selected tab.
-import { api, date, esc, failure, loading, remember, store } from "../lib.js";
+import { api, date, esc, failure, loadPlotly, loading, remember, store } from "../lib.js";
 
 export const TABS = [
   ["overview", "Overview", () => import("./overview.js")],
@@ -23,6 +23,8 @@ let shown = null; // header already on screen for this company
 
 export async function render(root, { key, tab, arg }) {
   if (!TABS.some((t) => t[0] === tab)) tab = TABS[0][0];
+  // Start loading the tab's code now so it arrives while the company profile is fetched.
+  const modP = TABS.find((t) => t[0] === tab)[2]();
   if (shown?.key !== key) {
     root.innerHTML = loading("Loading company");
     let co;
@@ -32,12 +34,14 @@ export async function render(root, { key, tab, arg }) {
     document.title = `${co.tickers[0] || co.name} · Disclosure`;
     root.innerHTML = `${header(co)}<nav class="tabs" id="tabs"></nav><div id="tab"></div>`;
     wireHeader(root, co);
+    // Most company views draw charts; fetch the chart library while the browser is otherwise idle.
+    (window.requestIdleCallback || ((f) => setTimeout(f, 800)))(() => loadPlotly().catch(() => {}));
   }
   const { co } = shown;
   root.querySelector("#tabs").innerHTML = TABS.map(([k, label]) => `<a href="#/c/${encodeURIComponent(key)}/${k}" class="${k === tab ? "on" : ""}">${label}</a>`).join("");
   const pane = root.querySelector("#tab");
   pane.innerHTML = loading("Loading");
-  const mod = await TABS.find((t) => t[0] === tab)[2]();
+  const mod = await modP;
   if (shown?.key !== key) return;
   try {
     await mod.render(pane, { co, key, arg });
