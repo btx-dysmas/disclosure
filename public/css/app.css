@@ -150,6 +150,8 @@ dl.kv dd { text-align: right; }
 .tag { display: inline-block; padding: 0 5px; border: 1px solid var(--line); border-radius: 2px; font-size: 11.5px; color: var(--ink-2); background: #fff; margin: 1px 4px 1px 0; white-space: nowrap; }
 .tag.amend { border-color: #e2c48a; background: #fdf6e7; color: #7a5412; }
 
+.chart-title { font-size: 12.5px; font-weight: 600; color: var(--ink-2); margin-bottom: 2px; }
+
 /* Filing reader */
 .reader { display: grid; gap: 14px; align-items: start; }
 @media (min-width: 1000px) { .reader { grid-template-columns: 270px minmax(0, 1fr); } }

@@ -122,7 +122,10 @@ export async function render(root, { co, key, arg }) {
   const jump = params.get("block");
   if (find.value) search();
   else if (jump) doc.querySelector(`#b${jump}`)?.scrollIntoView({ block: "start" });
-  else if (params.get("section")) {
+  else if (params.get("note") === "segment") {
+    const n = d.notes.find((x) => x.segment);
+    if (n) doc.querySelector(`#b${n.block}`)?.scrollIntoView({ block: "start" });
+  } else if (params.get("section")) {
     const s = d.sections.find((x) => x.key === params.get("section"));
     if (s) doc.querySelector(`#b${s.block}`)?.scrollIntoView({ block: "start" });
   }

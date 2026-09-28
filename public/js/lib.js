@@ -124,6 +124,27 @@ export function loadPlotly() {
   return plotly;
 }
 
+// Chart colors: muted, distinguishable, and legible on white.
+export const PALETTE = ["#1f3a66", "#5b86b8", "#2f7d6d", "#b7832f", "#8e5a9c", "#9fbad8", "#7fb3a5", "#c46a5a", "#6b7380", "#d4b16a"];
+
+/** Draw a Plotly chart with the house style. */
+export async function chart(el, data, layout = {}) {
+  const Plotly = await loadPlotly();
+  const base = {
+    font: { family: "Public Sans, Segoe UI, sans-serif", size: 12, color: "#454c57" },
+    paper_bgcolor: "#fff", plot_bgcolor: "#fff",
+    margin: { l: 56, r: 16, t: 12, b: 40 },
+    xaxis: { gridcolor: "#eef0f3", linecolor: "#c9ced6", tickcolor: "#c9ced6", zeroline: false, automargin: true },
+    yaxis: { gridcolor: "#eef0f3", linecolor: "#c9ced6", zerolinecolor: "#c9ced6", automargin: true },
+    legend: { orientation: "h", y: -0.18, x: 0, font: { size: 12 } },
+    hoverlabel: { font: { family: "Public Sans, sans-serif", size: 12 }, bgcolor: "#fff", bordercolor: "#c9ced6" },
+    colorway: PALETTE,
+    bargap: 0.28,
+  };
+  const merged = { ...base, ...layout, xaxis: { ...base.xaxis, ...layout.xaxis }, yaxis: { ...base.yaxis, ...layout.yaxis }, margin: { ...base.margin, ...layout.margin } };
+  await Plotly.react(el, data, merged, { displayModeBar: false, responsive: true });
+}
+
 export function loading(text = "Loading") {
   return `<div class="loading">${esc(text)}…</div>`;
 }
