@@ -208,7 +208,9 @@ dl.kv dd { text-align: right; }
 
 /* Home */
 .home-search { display: flex; gap: 8px; margin: 4px 0 6px; }
-.home-search input { flex: 1; max-width: 620px; height: 38px; padding: 0 12px; border: 1px solid var(--edge); border-radius: 2px; font-size: 15px; background: var(--input); }
+.home-field { position: relative; flex: 1; max-width: 620px; }
+.home-field .suggest { top: 41px; z-index: 15; }
+.home-search input { width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--edge); border-radius: 2px; font-size: 15px; background: var(--input); }
 .home-search input:focus { outline: 2px solid var(--focus); }
 .hint { color: var(--ink-3); font-size: 12.5px; margin-bottom: 16px; }
 .hint a { margin-right: 10px; }

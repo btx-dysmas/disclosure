@@ -1,5 +1,6 @@
 // Dashboard: search, the newest filings on EDGAR, the watchlist and recently viewed companies.
 import { api, date, esc, failure, loading, store, target } from "../lib.js";
+import { attachSuggest } from "../suggest.js";
 import { titleCase } from "./company.js";
 
 const EXAMPLES = ["AAPL", "MSFT", "NVDA", "BRK.B", "JPM", "Tesla"];
@@ -15,7 +16,10 @@ export async function render(root) {
       <div>
         <h1 class="page-title">Company research from SEC filings</h1>
         <form class="home-search" id="home-q" autocomplete="off">
-          <input name="q" placeholder="Ticker, company name or accession number" aria-label="Search" autofocus spellcheck="false">
+          <div class="home-field">
+            <input name="q" placeholder="Ticker, company name or accession number" aria-label="Search" autofocus spellcheck="false">
+            <div class="suggest" id="home-suggest" hidden></div>
+          </div>
           <button class="btn primary" style="height:38px">Open</button>
         </form>
         <div class="hint">Try ${EXAMPLES.map((e) => `<a href="#" data-q="${esc(e)}">${esc(e)}</a>`).join("")}· press <kbd>/</kbd> anywhere to search</div>
@@ -56,7 +60,8 @@ export async function render(root) {
     const r = (await api(`/search?q=${encodeURIComponent(q)}`).catch(() => []))[0];
     if (r) location.hash = target(r);
   };
-  root.querySelector("#home-q").addEventListener("submit", (e) => { e.preventDefault(); const q = e.target.q.value.trim(); if (q) go(q); });
+  const form = root.querySelector("#home-q");
+  attachSuggest(form, form.q, root.querySelector("#home-suggest"));
   root.querySelectorAll("[data-q]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); go(a.dataset.q); }));
   root.querySelectorAll("[data-go]").forEach((tr) => tr.addEventListener("click", (e) => { if (!e.target.closest("a")) location.hash = tr.dataset.go; }));
 
