@@ -207,6 +207,18 @@ del { background: #f7dcd9; color: #7d1d15; }
 .cmp.inline .was { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line); color: var(--ink-3); font-size: 12px; }
 .cmp.inline .was ins { display: none; }
 .cmp-gap { padding: 4px 14px; font-size: 11.5px; color: var(--ink-3); background: var(--head); border-bottom: 1px solid var(--line-2); text-align: center; }
+.toolbar label.chk { gap: 5px; margin-right: 6px; }
+.timeline { padding: 6px 14px 12px; }
+.tm { display: grid; grid-template-columns: 130px minmax(0, 1fr); border-bottom: 1px solid var(--line-2); }
+.tm-h { padding: 8px 0; font-weight: 600; font-size: 12.5px; color: var(--ink-2); }
+.tm ul { list-style: none; margin: 0; padding: 4px 0; border-left: 1px solid var(--line); }
+.tm li { display: grid; grid-template-columns: 56px 14px minmax(0, 1fr) 120px; align-items: baseline; padding: 3px 0; font-size: 13px; }
+.tm .d { color: var(--ink-3); font-size: 12px; text-align: right; padding-right: 8px; }
+.tm .dot { width: 7px; height: 7px; border-radius: 50%; background: #8a94a5; transform: translate(-4px, -1px); }
+.tm .form { text-align: right; }
+.c-reports .dot { background: #1f3a66; } .c-results .dot { background: #5b86b8; } .c-deals .dot { background: #b7832f; }
+.c-capital .dot { background: #8e5a9c; } .c-leadership .dot { background: #2f7d6d; } .c-governance .dot { background: #6b7380; }
+.c-restructuring .dot { background: #a8281e; } .c-ownership .dot { background: #c46a5a; } .c-insiders .dot { background: #c9ced6; }
 .insight { padding: 10px 16px 2px; }
 .insight + .insight { border-top: 1px solid var(--line-2); }
 .insight h3 { font-size: 12.5px; color: var(--navy); margin-bottom: 4px; }

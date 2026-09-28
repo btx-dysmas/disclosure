@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import compare, companies, document, filings, financials, insights, risk, search, segments, xbrl
+from . import compare, companies, document, filings, financials, insiders, insights, risk, search, segments, timeline, xbrl
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -99,6 +99,16 @@ async def risk_compare(key: str, old: str, new: str):
 @app.get("/api/company/{key}/compare")
 async def compare_filings(key: str, old: str, new: str, section: str = "7"):
     return cached(await compare.compare(await companies.resolve(key), old, new, section), 86400)
+
+
+@app.get("/api/company/{key}/insiders")
+async def company_insiders(key: str):
+    return cached(await insiders.transactions(await companies.resolve(key)), 3600)
+
+
+@app.get("/api/company/{key}/timeline")
+async def company_timeline(key: str, full: bool = False):
+    return cached(await timeline.events(await companies.resolve(key), full), 3600)
 
 
 @app.get("/api/company/{key}/xbrl")

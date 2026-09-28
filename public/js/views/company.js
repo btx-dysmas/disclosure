@@ -11,6 +11,8 @@ export const TABS = [
   ["xbrl", "XBRL", () => import("./xbrl.js")],
   ["risks", "Risk factors", () => import("./risk.js")],
   ["compare", "Compare", () => import("./compare.js")],
+  ["timeline", "Timeline", () => import("./timeline.js")],
+  ["insiders", "Insiders", () => import("./insiders.js")],
 ];
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
