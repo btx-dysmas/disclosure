@@ -66,6 +66,8 @@ Banks get their own rules, because debt ratios built for industrial companies mi
 
 **Workspace.** A watchlist, saved filings, company notes, and research ideas with a thesis and a stage. Everything is stored in the browser with no login and can be exported as a file.
 
+**Light and dark themes.** A toggle in the top bar switches every page, chart and diff view. The choice is remembered and applied before the first paint, so pages never flash the wrong theme.
+
 ## How it works
 
 ```

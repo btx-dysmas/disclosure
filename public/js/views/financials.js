@@ -105,5 +105,5 @@ export function spark(vals, w = 74, h = 18) {
   const ys = pts.map(([, v]) => v), lo = Math.min(...ys), hi = Math.max(...ys), n = vals.length - 1 || 1;
   const xy = pts.map(([i, v]) => `${((i / n) * (w - 4) + 2).toFixed(1)},${(h - 2 - ((v - lo) / (hi - lo || 1)) * (h - 4)).toFixed(1)}`).join(" ");
   const up = pts[pts.length - 1][1] >= pts[0][1];
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline fill="none" stroke="${up ? "#1a7348" : "#a8281e"}" stroke-width="1.3" points="${xy}"/></svg>`;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline fill="none" style="stroke:var(${up ? "--pos" : "--neg"})" stroke-width="1.3" points="${xy}"/></svg>`;
 }

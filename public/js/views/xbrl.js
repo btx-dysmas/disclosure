@@ -1,5 +1,5 @@
 // XBRL explorer: search every concept a company reports, inspect its facts, and see how a filing is structured.
-import { api, chart, date, esc, failure, loading, num, ok, store } from "../lib.js";
+import { api, chart, date, esc, failure, loading, num, ok, PALETTE, store } from "../lib.js";
 
 export async function render(root, { co, key, arg }) {
   root.innerHTML = loading("Loading the company's XBRL facts");
@@ -86,7 +86,7 @@ export async function render(root, { co, key, arg }) {
     if (series.length > 1) {
       const big = unit === "USD" && Math.max(...series.map((x) => Math.abs(x.val))) >= 1e9;
       chart(el.querySelector("#xc"), [{
-        type: "bar", x: series.map((x) => x.end.slice(0, 4)), y: series.map((x) => (big ? x.val / 1e9 : x.val)), marker: { color: "#1f3a66" },
+        type: "bar", x: series.map((x) => x.end.slice(0, 4)), y: series.map((x) => (big ? x.val / 1e9 : x.val)), marker: { color: PALETTE[0] },
         hovertemplate: big ? "%{x}: $%{y:,.2f}B<extra></extra>" : "%{x}: %{y:,}<extra></extra>",
       }], { margin: { t: 8, b: 30 }, yaxis: big ? { tickprefix: "$", ticksuffix: "B" } : {} });
     }

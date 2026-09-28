@@ -1,5 +1,5 @@
 // Insider trading: Form 4 purchases and sales, by month and by insider.
-import { api, chart, date, esc, failure, loading, money, num, ok, store } from "../lib.js";
+import { api, chart, css, date, esc, failure, loading, money, num, ok, store } from "../lib.js";
 
 export async function render(root, { co, key }) {
   const k = encodeURIComponent(key);
@@ -64,8 +64,8 @@ export async function render(root, { co, key }) {
 
   const M = d.months;
   chart(root.querySelector("#mc"), [
-    { type: "bar", name: "Purchases", x: M.map((m) => m.month), y: M.map((m) => m.buys / 1e6), marker: { color: "#1a7348" }, hovertemplate: "%{x}: $%{y:,.1f}M bought<extra></extra>" },
-    { type: "bar", name: "Sales", x: M.map((m) => m.month), y: M.map((m) => -m.sells / 1e6), marker: { color: "#a8281e" }, hovertemplate: "%{x}: $%{customdata:,.1f}M sold<extra></extra>", customdata: M.map((m) => m.sells / 1e6) },
+    { type: "bar", name: "Purchases", x: M.map((m) => m.month), y: M.map((m) => m.buys / 1e6), marker: { color: css("--pos") }, hovertemplate: "%{x}: $%{y:,.1f}M bought<extra></extra>" },
+    { type: "bar", name: "Sales", x: M.map((m) => m.month), y: M.map((m) => -m.sells / 1e6), marker: { color: css("--neg") }, hovertemplate: "%{x}: $%{customdata:,.1f}M sold<extra></extra>", customdata: M.map((m) => m.sells / 1e6) },
   ], { barmode: "relative", yaxis: { ticksuffix: "M", title: { text: "$ millions", font: { size: 11 } } }, xaxis: { type: "category" } });
 }
 

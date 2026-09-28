@@ -124,20 +124,37 @@ export function loadPlotly() {
   return plotly;
 }
 
-// Chart colors: muted, distinguishable, and legible on white.
-export const PALETTE = ["#1f3a66", "#5b86b8", "#2f7d6d", "#b7832f", "#8e5a9c", "#9fbad8", "#7fb3a5", "#c46a5a", "#6b7380", "#d4b16a"];
+// Chart colors: muted and distinguishable. The dark set is lighter so series stay legible on a dark panel.
+const LIGHT = ["#1f3a66", "#5b86b8", "#2f7d6d", "#b7832f", "#8e5a9c", "#9fbad8", "#7fb3a5", "#c46a5a", "#6b7380", "#d4b16a"];
+const DARK = ["#7fa6de", "#4f7fc4", "#4fb39c", "#d9a54a", "#b58bc6", "#a9c4e6", "#8ccab9", "#e0907f", "#9aa4b4", "#e0c68a"];
+export const PALETTE = [...LIGHT];
+
+export const isDark = () => document.documentElement.classList.contains("dark");
+
+/** A color token from the stylesheet, so charts follow the theme. */
+export const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+/** Switch themes: remember the choice, swap chart colors, and tell the router to redraw. */
+export function setTheme(dark) {
+  document.documentElement.classList.toggle("dark", dark);
+  PALETTE.splice(0, PALETTE.length, ...(dark ? DARK : LIGHT));
+  store.set("theme", dark ? "dark" : "light");
+  window.dispatchEvent(new Event("themechange"));
+}
+PALETTE.splice(0, PALETTE.length, ...(isDark() ? DARK : LIGHT));
 
 /** Draw a Plotly chart with the house style. */
 export async function chart(el, data, layout = {}) {
   const Plotly = await loadPlotly();
+  const grid = css("--line-2"), axis = css("--line");
   const base = {
-    font: { family: "Public Sans, Segoe UI, sans-serif", size: 12, color: "#454c57" },
-    paper_bgcolor: "#fff", plot_bgcolor: "#fff",
+    font: { family: "Public Sans, Segoe UI, sans-serif", size: 12, color: css("--ink-2") },
+    paper_bgcolor: css("--panel"), plot_bgcolor: css("--panel"),
     margin: { l: 56, r: 16, t: 12, b: 40 },
-    xaxis: { gridcolor: "#eef0f3", linecolor: "#c9ced6", tickcolor: "#c9ced6", zeroline: false, automargin: true },
-    yaxis: { gridcolor: "#eef0f3", linecolor: "#c9ced6", zerolinecolor: "#c9ced6", automargin: true },
+    xaxis: { gridcolor: grid, linecolor: axis, tickcolor: axis, zeroline: false, automargin: true },
+    yaxis: { gridcolor: grid, linecolor: axis, zerolinecolor: axis, automargin: true },
     legend: { orientation: "h", y: -0.18, x: 0, font: { size: 12 } },
-    hoverlabel: { font: { family: "Public Sans, sans-serif", size: 12 }, bgcolor: "#fff", bordercolor: "#c9ced6" },
+    hoverlabel: { font: { family: "Public Sans, sans-serif", size: 12, color: css("--ink") }, bgcolor: css("--panel"), bordercolor: axis },
     colorway: PALETTE,
     bargap: 0.28,
   };

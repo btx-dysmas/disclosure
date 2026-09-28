@@ -1,5 +1,5 @@
 // Institutional ownership: positions of the largest 13F filers in this company, and how they changed last quarter.
-import { api, chart, date, esc, failure, loading, money, num, ok, pct, tone } from "../lib.js";
+import { api, chart, css, date, esc, failure, loading, money, num, ok, pct, tone } from "../lib.js";
 
 const STATUS = { new: "New position", increased: "Increased", reduced: "Reduced", exited: "Sold out", unchanged: "Unchanged", noprior: "No prior report" };
 
@@ -50,8 +50,8 @@ export async function render(root, { co, key }) {
   const top = d.holders.filter((h) => ok(h.change)).slice(0, 15).reverse();
   chart(root.querySelector("#oc"), [{
     type: "bar", orientation: "h", y: top.map((h) => short(h.name)), x: top.map((h) => h.change / 1e6),
-    marker: { color: top.map((h) => (h.change >= 0 ? "#1a7348" : "#a8281e")) }, hovertemplate: "%{y}: %{x:+,.2f}M shares<extra></extra>",
-  }], { margin: { l: 170, t: 8, b: 36 }, xaxis: { ticksuffix: "M", zeroline: true, zerolinecolor: "#8a94a5" }, yaxis: { automargin: true }, showlegend: false });
+    marker: { color: top.map((h) => (h.change >= 0 ? css("--pos") : css("--neg"))) }, hovertemplate: "%{y}: %{x:+,.2f}M shares<extra></extra>",
+  }], { margin: { l: 170, t: 8, b: 36 }, xaxis: { ticksuffix: "M", zeroline: true, zerolinecolor: css("--ink-3") }, yaxis: { automargin: true }, showlegend: false });
 }
 
 // Manager names as filed are capitalized and carry legal suffixes; shorten them for the chart.

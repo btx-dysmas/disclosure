@@ -1,5 +1,5 @@
 // Filing search: find a phrase across a company's filings, with highlighted excerpts that open in the reader.
-import { api, chart, date, esc, failure, loading, store } from "../lib.js";
+import { api, chart, date, esc, failure, loading, PALETTE, store } from "../lib.js";
 
 const SUGGEST = ["cloud revenue", "free cash flow", "artificial intelligence", "guidance", "restructuring", "share repurchase", "impairment", "cybersecurity", "supply chain", "tariffs"];
 const SCOPES = [["10-K,10-Q", "Annual and quarterly reports"], ["10-K", "Annual reports"], ["10-Q", "Quarterly reports"], ["8-K", "Current reports"], ["10-K,10-Q,8-K,DEF 14A,S-1,S-4,20-F,6-K", "All major forms"]];
@@ -51,7 +51,7 @@ export async function render(root, { co, key, arg }) {
           ${h.excerpts ? h.excerpts.map((e) => `<a class="ex" href="#/c/${k}/read/${h.accession}${h.fileType && !["10-K", "10-Q", "8-K", "20-F", "DEF 14A"].includes(h.fileType) ? `/${encodeURIComponent(h.file)}` : ""}?block=${e.block}&find=${encodeURIComponent(st.q.replace(/"/g, ""))}">${e.table ? `<span class="muted">[table]</span> ` : ""}${e.html}</a>`).join("") : `<button class="btn small more">Show excerpts</button>`}
         </li>`).join("")}</ol>`;
     const ys = Object.keys(years).sort();
-    chart(out.querySelector("#yc"), [{ type: "bar", x: ys, y: ys.map((y) => years[y]), marker: { color: "#5b86b8" }, hovertemplate: "%{x}: %{y} documents<extra></extra>" }],
+    chart(out.querySelector("#yc"), [{ type: "bar", x: ys, y: ys.map((y) => years[y]), marker: { color: PALETTE[1] }, hovertemplate: "%{x}: %{y} documents<extra></extra>" }],
       { margin: { t: 4, b: 24, l: 30, r: 8 }, yaxis: { dtick: 1, showgrid: false }, xaxis: { type: "category" } });
     out.querySelectorAll(".more").forEach((b) => b.addEventListener("click", async () => {
       const li = b.closest("li"), h = r.hits[+li.dataset.i];

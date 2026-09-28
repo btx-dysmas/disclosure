@@ -1,5 +1,5 @@
 // Risk factors: what was added, removed and reworded between two 10-Ks, and how themes shift over years.
-import { api, date, esc, failure, loading } from "../lib.js";
+import { api, date, esc, failure, isDark, loading } from "../lib.js";
 
 const STATUS = { added: "Added", removed: "Removed", modified: "Modified", minor: "Minor edits", unchanged: "Unchanged" };
 
@@ -34,7 +34,7 @@ export async function render(root, { co, key }) {
       ${y.themes.names.map((n) => {
         const row = vals.map((r) => r[n]);
         const d = row[row.length - 1] - row[0];
-        return `<tr><td>${esc(n)}</td>${row.map((v) => `<td class="r" style="background:rgba(31,58,102,${(0.08 + 0.62 * (v / max)).toFixed(2)}); color:${v / max > 0.55 ? "#fff" : "inherit"}">${v.toFixed(1)}</td>`).join("")}
+        return `<tr><td>${esc(n)}</td>${row.map((v) => `<td class="r" style="background:rgba(var(--heat-rgb),${(0.08 + 0.62 * (v / max)).toFixed(2)}); color:${v / max > 0.55 && !isDark() ? "#fff" : "inherit"}">${v.toFixed(1)}</td>`).join("")}
           <td class="r ${d > 0.5 ? "neg" : d < -0.5 ? "pos" : "muted"}">${d > 0 ? "+" : ""}${d.toFixed(1)}</td></tr>`;
       }).join("")}
       <tr class="total"><td>Risk factors listed</td>${F.slice().reverse().map((f) => `<td class="r">${f.count}</td>`).join("")}<td></td></tr>
