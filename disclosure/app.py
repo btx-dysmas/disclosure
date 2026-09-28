@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import companies
+from . import companies, filings
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -35,6 +35,11 @@ async def search(q: str):
 @app.get("/api/company/{key}")
 async def company(key: str):
     return cached(await companies.profile(await companies.resolve(key)), 3600)
+
+
+@app.get("/api/company/{key}/filings")
+async def company_filings(key: str, full: bool = False):
+    return cached(await filings.library(await companies.resolve(key), full), 1800)
 
 
 # Local development serves the front end from the same process; on Vercel, public/ is served by the CDN.
