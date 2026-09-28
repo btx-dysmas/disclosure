@@ -2,6 +2,7 @@
 import { api, date, esc, failure, loading, remember, store } from "../lib.js";
 
 export const TABS = [
+  ["overview", "Overview", () => import("./overview.js")],
   ["filings", "Filings", () => import("./filings.js")],
   ["read", "Reader", () => import("./reader.js")],
   ["segments", "Segments", () => import("./segments.js")],

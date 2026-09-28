@@ -64,7 +64,7 @@ main { max-width: 1480px; margin: 0 auto; padding: 16px 20px 32px; }
 .panel > header .right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
 .panel .body { padding: 12px 14px; }
 .panel .note { padding: 8px 14px 10px; color: var(--ink-3); font-size: 12px; border-top: 1px solid var(--line-2); }
-.cols { display: grid; gap: 14px; }
+.cols { display: grid; gap: 14px; align-items: start; }
 .cols > .panel { margin-bottom: 0; }
 .cols + .panel, .cols + .cols { margin-top: 14px; }
 @media (min-width: 1100px) {
@@ -150,6 +150,11 @@ dl.kv dd { text-align: right; }
 .tag { display: inline-block; padding: 0 5px; border: 1px solid var(--line); border-radius: 2px; font-size: 11.5px; color: var(--ink-2); background: #fff; margin: 1px 4px 1px 0; white-space: nowrap; }
 .tag.amend { border-color: #e2c48a; background: #fdf6e7; color: #7a5412; }
 
+.insight { padding: 10px 16px 2px; }
+.insight + .insight { border-top: 1px solid var(--line-2); }
+.insight h3 { font-size: 12.5px; color: var(--navy); margin-bottom: 4px; }
+.insight ul { margin: 0 0 8px; padding-left: 18px; }
+.insight li { margin-bottom: 4px; line-height: 1.5; }
 .chart-title { font-size: 12.5px; font-weight: 600; color: var(--ink-2); margin-bottom: 2px; }
 
 /* Filing reader */
@@ -195,3 +200,4 @@ span.fig { background: #e3edf9; color: #123a6b; border-radius: 1px; }
   main { padding: 12px; }
   .co .actions { margin-left: 0; }
 }
+.grid.nowrap-first td:first-child { white-space: nowrap; }

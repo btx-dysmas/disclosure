@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import companies, document, filings, financials, segments
+from . import companies, document, filings, financials, insights, segments
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -58,6 +58,18 @@ async def latest_filing(key: str, forms: str = "10-K,10-Q,20-F,40-F"):
 async def company_financials(key: str):
     body = await financials.statements(await companies.resolve(key))
     return cached({**body, "layout": financials.LAYOUT}, 21600)
+
+
+@app.get("/api/company/{key}/insights")
+async def company_insights(key: str):
+    cik = await companies.resolve(key)
+    fin = await financials.statements(cik)
+    try:
+        seg = await segments.segments(cik)
+    except (NotFound, Upstream):
+        seg = None
+    sic = int((await companies.submissions(cik)).get("sic") or 0)
+    return cached(insights.generate(fin, seg, financial=6000 <= sic < 6800), 21600)
 
 
 @app.get("/api/company/{key}/segments")
