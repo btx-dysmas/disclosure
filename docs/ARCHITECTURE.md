@@ -21,7 +21,7 @@ css/app.css                  document.py    HTML to blocks          ──► fi
                              sec.py, store.py   throttled client, SQLite cache
 ```
 
-On Vercel, `vercel.json` sends `/api/*` to `api/index.py`, which imports the app, and serves `public/` as static files. Locally, the same app mounts `public/` itself, so one `uvicorn` command runs everything.
+On Vercel, the FastAPI app in `api/index.py` receives every request that isn't a static file in `public/`. Vercel can hand the function the path in a different form than a local server (with the `/api` prefix moved into `root_path`), so the entry point rebuilds the full path before routing. Locally, the same app mounts `public/` itself, so one `uvicorn` command runs everything.
 
 ## Talking to the SEC
 

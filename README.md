@@ -2,6 +2,8 @@
 
 **A research workstation for SEC filings: search, read, compare and analyze what companies are legally required to disclose.**
 
+**Live demo:** [disclosure-three.vercel.app](https://disclosure-three.vercel.app/)
+
 Disclosure is built around one question: *what is actually happening inside this business, based on what management has to tell the SEC?* Type a ticker, a company name or an accession number and it opens the company's complete filing history. From there you can read any 10-K or 10-Q in a clean reader with section navigation, search every filing since 2001, break revenue down by segment, compare this year's risk factors with last year's word by word, and see what insiders and the largest institutions have been buying and selling.
 
 Everything comes from SEC EDGAR and the SEC's XBRL data. There are no paid APIs, no third-party financial database and no AI model: every number and every sentence of commentary traces back to a filing.
@@ -136,7 +138,7 @@ python scripts/build_13f.py
 ## Deploy (free)
 
 1. Push the repository to GitHub.
-2. Import it at [vercel.com/new](https://vercel.com/new). `vercel.json` routes `/api/*` to the FastAPI app, and the front end in `public/` is served as static files.
+2. Import it at [vercel.com/new](https://vercel.com/new). Vercel detects the FastAPI app in `api/index.py` and sends requests to it, and the front end in `public/` is served as static files.
 3. Add `SEC_USER_AGENT` under **Settings → Environment Variables**.
 
 ## Project structure
