@@ -88,7 +88,8 @@ def split(blocks: list[document.Block], start: int, end: int) -> list[dict]:
         elif cur is not None and b.kind == "p":
             cur["body"].append(b.text)
     # Filers that set no risk headings apart: treat each paragraph as a risk, titled by its first sentence.
-    if len(factors) < 5:
+    paragraphs = sum(1 for i in range(start + 1, end) if blocks[i].kind == "p" and len(blocks[i].text) > 120)
+    if not factors or (len(factors) < 3 and paragraphs > 10):
         factors = []
         for i in range(start + 1, end):
             b = blocks[i]
@@ -115,7 +116,7 @@ async def _risk_section(cik: int, f: dict) -> dict | None:
     return {"filing": {"accession": f["accession"], "form": f["form"], "filed": f["filed"], "period": f["period"]}, "factors": split(blocks, start, end)}
 
 
-@memoize("risk:years:v5", DAY)
+@memoize("risk:years:v6", DAY)
 async def years(cik: int, count: int = 5) -> dict:
     lib = await filings.library(cik)
     tenks = [f for f in lib["filings"] if f["form"] in ("10-K", "20-F")][:count]
@@ -144,7 +145,7 @@ async def _safe(cik: int, f: dict):
         return None
 
 
-@memoize("risk:compare:v7", DAY * 30)
+@memoize("risk:compare:v8", DAY * 30)
 async def compare(cik: int, old_acc: str, new_acc: str) -> dict:
     lib = await filings.library(cik)
     by_acc = {f["accession"]: f for f in lib["filings"]}

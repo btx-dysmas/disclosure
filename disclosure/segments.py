@@ -66,7 +66,8 @@ def _label(member: str, labels: dict) -> str:
             return COUNTRY[name]
         text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", name)
     text = re.sub(r"\s*\[(Member|Domain)\]\s*$", "", unescape(text)).strip()
-    text = re.sub(r"\s+(Segment|Member)$", "", text)
+    for _ in range(2):  # "North America Segment Member" loses both words
+        text = re.sub(r"\s+(Segment|Member)$", "", text)
     if text.isupper() and len(text) > 4:
         text = text.title()
     return text
@@ -191,7 +192,7 @@ def _structure(members: list[str], latest: dict, total: float | None, prior: dic
     return [members], parent
 
 
-@memoize("segments:v5", DAY)
+@memoize("segments:v6", DAY)
 async def segments(cik: int, count: int = 3) -> dict:
     lib = await filings.library(cik)
     tenks = [f for f in lib["filings"] if f["form"] in ("10-K", "10-KT") and f["xbrl"]][:count]

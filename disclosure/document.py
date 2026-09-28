@@ -283,8 +283,9 @@ def _tidy(blocks: list[Block]) -> list[Block]:
     for b in blocks:
         if b.kind == "p" and len(b.text) < 60:
             counts[b.text] = counts.get(b.text, 0) + 1
-    # A short line repeated on many pages ("PART II", "Item 7", the company name) is a page header.
-    repeated = {t for t, n in counts.items() if n >= 5}
+    # A short line repeated on many pages ("PART II", "Item 7", the company name in capitals) is a
+    # page header. Repeated ordinary sentences ("Not applicable.") are real text and stay.
+    repeated = {t for t, n in counts.items() if n >= 5 and (PART.match(t) or ITEM.match(t) or t.isupper() or PAGE_NO.match(t))}
     out: list[Block] = []
     k = 0
     while k < len(blocks):
@@ -411,7 +412,7 @@ async def documents(cik: int, accession: str) -> list[dict]:
     return out
 
 
-@memoize("doc:v6", DAY * 30)
+@memoize("doc:v7", DAY * 30)
 async def load(cik: int, accession: str, path: str) -> dict:
     """Parsed blocks for one document of a filing. Filings never change, so this is cached for a month."""
     url = sec.archive_url(cik, accession, path)
