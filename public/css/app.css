@@ -279,5 +279,14 @@ span.fig { background: #e3edf9; color: #123a6b; border-radius: 1px; }
   .topnav, .session { display: none; }
   main { padding: 12px; }
   .co .actions { margin-left: 0; }
+  .seg { flex-wrap: wrap; }
+  .seg button { white-space: nowrap; border-bottom: 1px solid #bfc6d0; }
+  .panel > header .right { margin-left: 0; flex-wrap: wrap; }
+  .reader .rnav { position: static; max-height: 320px; }
+  .risks summary { grid-template-columns: 1fr; gap: 4px; }
+  .risks .rb, .risks .small-link { padding-left: 14px; margin-left: 0; }
+  .tm { grid-template-columns: 1fr; }
+  .cmp-row { grid-template-columns: 1fr; }
+  .cmp-row .l { border-right: 0; border-bottom: 1px dashed var(--line); }
 }
 .grid.nowrap-first td:first-child { white-space: nowrap; }

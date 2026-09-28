@@ -30,25 +30,36 @@ class Upstream(Exception):
     """The SEC could not be reached or kept failing."""
 
 
+# The HTTP client and the rate-limit lock belong to an event loop. A serverless runtime can start
+# a fresh loop for each request, so both are recreated when the running loop changes.
+_loop = None
 _client: httpx.AsyncClient | None = None
-_lock = asyncio.Lock()
+_lock: asyncio.Lock | None = None
 _last = 0.0
 
 
-def client() -> httpx.AsyncClient:
-    global _client
-    if _client is None:
+def _bind() -> None:
+    global _loop, _client, _lock
+    loop = asyncio.get_running_loop()
+    if loop is not _loop:
+        _loop = loop
+        _lock = asyncio.Lock()
         _client = httpx.AsyncClient(
             headers={"User-Agent": USER_AGENT, "Accept-Encoding": "gzip, deflate"},
             timeout=httpx.Timeout(45.0, connect=10.0),
             follow_redirects=True,
         )
+
+
+def client() -> httpx.AsyncClient:
+    _bind()
     return _client
 
 
 async def _turn() -> None:
     """Wait for this request's slot so the process never exceeds the SEC's rate."""
     global _last
+    _bind()
     async with _lock:
         wait = _last + MIN_INTERVAL - time.monotonic()
         if wait > 0:
