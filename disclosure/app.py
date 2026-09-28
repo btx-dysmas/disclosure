@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import companies, document, filings, financials, insights, search, segments, xbrl
+from . import companies, document, filings, financials, insights, risk, search, segments, xbrl
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -84,6 +84,16 @@ async def fulltext(key: str, q: str, forms: str = "10-K,10-Q", start: str = "200
 @app.get("/api/filing/{key}/{accession}/excerpts")
 async def filing_excerpts(key: str, accession: str, q: str, doc: str):
     return cached(await search.excerpts(await companies.resolve(key), accession, doc, q, 5), 86400)
+
+
+@app.get("/api/company/{key}/risks")
+async def risk_years(key: str):
+    return cached(await risk.years(await companies.resolve(key)), 21600)
+
+
+@app.get("/api/company/{key}/risks/compare")
+async def risk_compare(key: str, old: str, new: str):
+    return cached(await risk.compare(await companies.resolve(key), old, new), 86400)
 
 
 @app.get("/api/company/{key}/xbrl")

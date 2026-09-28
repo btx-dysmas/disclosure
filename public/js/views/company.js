@@ -9,6 +9,7 @@ export const TABS = [
   ["segments", "Segments", () => import("./segments.js")],
   ["financials", "Financials", () => import("./financials.js")],
   ["xbrl", "XBRL", () => import("./xbrl.js")],
+  ["risks", "Risk factors", () => import("./risk.js")],
 ];
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
