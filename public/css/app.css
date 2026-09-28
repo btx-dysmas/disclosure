@@ -219,6 +219,17 @@ del { background: #f7dcd9; color: #7d1d15; }
 .c-reports .dot { background: #1f3a66; } .c-results .dot { background: #5b86b8; } .c-deals .dot { background: #b7832f; }
 .c-capital .dot { background: #8e5a9c; } .c-leadership .dot { background: #2f7d6d; } .c-governance .dot { background: #6b7380; }
 .c-restructuring .dot { background: #a8281e; } .c-ownership .dot { background: #c46a5a; } .c-insiders .dot { background: #c9ced6; }
+dl.kv.plain dd { text-align: left; }
+.home-top { margin-bottom: 4px; }
+.ws-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-bottom: 10px; }
+.ws-head .page-title { margin: 0; }
+.ws-head .right { margin-left: auto; display: flex; gap: 8px; }
+.link-btn { border: 0; background: none; color: var(--link); cursor: pointer; font-size: 12.5px; padding: 0; }
+.link-btn:hover { text-decoration: underline; }
+.grid.ideas textarea { min-width: 280px; font-size: 12.5px; }
+.note-row { padding: 9px 14px; border-bottom: 1px solid var(--line-2); }
+.note-row p { margin: 4px 0 0; white-space: pre-wrap; color: var(--ink-2); }
+kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); border-bottom-width: 2px; padding: 0 4px; border-radius: 2px; background: #fff; }
 .insight { padding: 10px 16px 2px; }
 .insight + .insight { border-top: 1px solid var(--line-2); }
 .insight h3 { font-size: 12.5px; color: var(--navy); margin-bottom: 4px; }

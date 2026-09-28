@@ -32,6 +32,12 @@ async def search_companies(q: str):
     return cached(await companies.search(q), 3600)
 
 
+@app.get("/api/latest")
+async def latest_filings(form: str = "10-K"):
+    """Newest filings across EDGAR for the dashboard feed."""
+    return cached(await filings.latest(form), 600)
+
+
 @app.get("/api/company/{key}")
 async def company(key: str):
     return cached(await companies.profile(await companies.resolve(key)), 3600)

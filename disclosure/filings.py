@@ -79,6 +79,30 @@ async def library(cik: int, full: bool = False) -> dict:
     return {"filings": rows, "complete": full or not older, "olderCount": sum(f.get("filingCount", 0) for f in older)}
 
 
+async def latest(form: str = "10-K", count: int = 40) -> list[dict]:
+    """The most recent filings of one form across all companies, from EDGAR's current-events feed."""
+    import re
+    from urllib.parse import quote
+
+    from lxml import etree
+
+    url = f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type={quote(form)}&company=&dateb=&owner=include&start=0&count={count}&output=atom"
+    root = etree.fromstring(await sec.get(url, 600))
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    out, seen = [], set()
+    for e in root.findall("a:entry", ns):
+        title = e.findtext("a:title", "", ns)
+        m = re.match(r"^(.+?) - (.+) \((\d{10})\) \((\w+)\)$", title)
+        acc = re.search(r"accession-number=([\d-]+)", e.findtext("a:id", "", ns) or "")
+        if not m or not acc or acc[1] in seen or m[4] not in ("Filer", "Issuer", "Subject"):
+            continue
+        seen.add(acc[1])
+        out.append({"form": m[1], "company": m[2], "cik": int(m[3]), "accession": acc[1],
+                    "filed": (re.search(r"Filed:</b> ([\d-]+)", e.findtext("a:summary", "", ns) or "") or [None, None])[1],
+                    "accepted": e.findtext("a:updated", "", ns)})
+    return out
+
+
 async def find(cik: int, accession: str) -> dict:
     """One filing's library row, searching older pages only if needed."""
     lib = await library(cik)

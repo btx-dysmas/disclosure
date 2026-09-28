@@ -1,5 +1,5 @@
 // Company overview: rule-based summary, key figures, recent reports and registrant details.
-import { api, date, esc, failure, loading, mil, ok, pct, tone } from "../lib.js";
+import { api, date, esc, failure, loading, mil, ok, pct, store, tone } from "../lib.js";
 import { spark } from "./financials.js";
 
 const MAIN_FORMS = new Set(["10-K", "10-Q", "8-K", "20-F", "6-K", "DEF 14A", "10-K/A", "10-Q/A", "S-1", "S-4"]);
@@ -28,6 +28,10 @@ export async function render(root, { co, key }) {
             <tr><td class="form">${esc(f.form)}</td><td><a href="#/c/${k}/read/${f.accession}">${esc(f.name)}</a>${f.items.filter((i) => i.code !== "9.01").slice(0, 2).map((i) => `<div class="muted">${esc(i.label)}</div>`).join("")}</td><td class="r">${date(f.filed)}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">No reports on file.</div>`}
         </section>
         <section class="panel">
+          <header><h2>Notes</h2><span class="sub" id="nsaved"></span></header>
+          <div class="body"><textarea class="field" id="note" rows="5" placeholder="Your notes on ${esc(co.tickers[0] || co.name)}. Saved in this browser as you type."></textarea></div>
+        </section>
+        <section class="panel">
           <header><h2>Registrant</h2></header>
           <dl class="kv">
             <dt>Business address</dt><dd>${esc(co.address || "—")}</dd>
@@ -40,6 +44,20 @@ export async function render(root, { co, key }) {
         </section>
       </div>
     </div>`;
+
+  const note = root.querySelector("#note"), saved = root.querySelector("#nsaved");
+  const nk = `note:${co.cik}`;
+  const existing = store.get(nk, {});
+  note.value = existing.text || "";
+  if (existing.updated) saved.textContent = `Last edited ${date(existing.updated)}`;
+  let nt = null;
+  note.addEventListener("input", () => {
+    clearTimeout(nt);
+    nt = setTimeout(() => {
+      store.set(nk, { text: note.value, updated: new Date().toISOString().slice(0, 10), cik: co.cik, ticker: co.tickers[0], name: co.name });
+      saved.textContent = "Saved";
+    }, 400);
+  });
 
   const insEl = root.querySelector("#ins");
   if (ins.status === "rejected") insEl.innerHTML = failure("Summary unavailable", ins.reason);
