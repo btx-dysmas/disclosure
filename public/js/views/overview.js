@@ -67,11 +67,11 @@ export async function render(root, { co, key }) {
   const kf = root.querySelector("#kf");
   if (fin.status === "rejected") { kf.innerHTML = failure("Figures unavailable", fin.reason); return; }
   const A = fin.value.annual, L = A.lines, n = A.periods.length, cols = A.periods.slice(-5), off = n - cols.length;
-  const row = (label, vals, fmt, cls = "") => `<tr class="${cls}"><td>${label}</td>${vals.map((v) => `<td class="r">${fmt(v)}</td>`).join("")}<td class="c">${spark(vals, 56, 16)}</td></tr>`;
+  const row = (label, vals, fmt, cls = "") => `<tr class="${cls}"><td>${label}</td>${vals.map((v) => `<td class="r">${fmt(v)}</td>`).join("")}<td class="c">${spark(vals, 44, 16)}</td></tr>`;
   const at = (key) => cols.map((_, i) => L[key][i + off]);
   const growth = cols.map((_, i) => (ok(L.revenue[i + off]) && ok(L.revenue[i + off - 1]) && L.revenue[i + off - 1] ? L.revenue[i + off] / L.revenue[i + off - 1] - 1 : null));
   const margin = cols.map((_, i) => (ok(L.operatingIncome[i + off]) && L.revenue[i + off] ? L.operatingIncome[i + off] / L.revenue[i + off] : null));
-  kf.innerHTML = `<table class="grid nowrap-first"><thead><tr><th></th>${cols.map((p) => `<th class="r">${esc(p.label)}</th>`).join("")}<th></th></tr></thead><tbody>
+  kf.innerHTML = `<div class="scroll"><table class="grid nowrap-first kf"><thead><tr><th></th>${cols.map((p) => `<th class="r">${esc(p.label)}</th>`).join("")}<th></th></tr></thead><tbody>
     ${row("Revenue", at("revenue"), mil, "total")}
     ${row("Growth", growth, (v) => `<span class="${tone(v)}">${pct(v, 1, true)}</span>`)}
     ${row("Operating margin", margin, (v) => pct(v))}
@@ -79,5 +79,5 @@ export async function render(root, { co, key }) {
     ${row("Diluted EPS", at("epsDiluted"), (v) => (ok(v) ? v.toFixed(2) : "—"))}
     ${row("Free cash flow", at("fcf"), mil)}
     ${row("Net debt (cash)", at("netDebt"), mil)}
-  </tbody></table>`;
+  </tbody></table></div>`;
 }

@@ -359,3 +359,5 @@ span.fig { background: var(--fig-bg); color: var(--fig-ink); border-radius: 1px;
 }
 .grid.nowrap-first td:first-child { white-space: nowrap; }
 html.dark .omni input { border-color: #33405a; }
+.grid.kf th, .grid.kf td { padding-left: 8px; padding-right: 8px; }
+.grid.kf td.c { padding-left: 4px; padding-right: 10px; }

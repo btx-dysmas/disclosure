@@ -70,6 +70,8 @@ Banks get their own rules, because debt ratios built for industrial companies mi
 
 **Light and dark themes.** A toggle in the top bar switches every page, chart and diff view. The choice is remembered and applied before the first paint, so pages never flash the wrong theme.
 
+![Amazon's segments in dark mode](docs/screenshots/segments-dark.png)
+
 ## How it works
 
 ```
