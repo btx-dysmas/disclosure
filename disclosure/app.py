@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import companies, document, filings, financials, insights, segments
+from . import companies, document, filings, financials, insights, segments, xbrl
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -70,6 +70,21 @@ async def company_insights(key: str):
         seg = None
     sic = int((await companies.submissions(cik)).get("sic") or 0)
     return cached(insights.generate(fin, seg, financial=6000 <= sic < 6800), 21600)
+
+
+@app.get("/api/company/{key}/xbrl")
+async def xbrl_concepts(key: str):
+    return cached(await xbrl.concepts(await companies.resolve(key)), 21600)
+
+
+@app.get("/api/company/{key}/xbrl/{taxonomy}/{concept}")
+async def xbrl_facts(key: str, taxonomy: str, concept: str):
+    return cached(await xbrl.facts(await companies.resolve(key), taxonomy, concept), 21600)
+
+
+@app.get("/api/filing/{key}/{accession}/structure")
+async def filing_structure(key: str, accession: str):
+    return cached(await xbrl.structure(await companies.resolve(key), accession), 86400)
 
 
 @app.get("/api/company/{key}/segments")
