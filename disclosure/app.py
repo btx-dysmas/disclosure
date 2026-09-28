@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import companies, filings
+from . import companies, document, filings
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -40,6 +40,36 @@ async def company(key: str):
 @app.get("/api/company/{key}/filings")
 async def company_filings(key: str, full: bool = False):
     return cached(await filings.library(await companies.resolve(key), full), 1800)
+
+
+@app.get("/api/company/{key}/latest")
+async def latest_filing(key: str, forms: str = "10-K,10-Q,20-F,40-F"):
+    """Accession of the most recent filing of the given forms, for links like 'open the latest 10-K'."""
+    cik = await companies.resolve(key)
+    want = set(forms.split(","))
+    lib = await filings.library(cik)
+    hit = next((f for f in lib["filings"] if f["form"] in want), None)
+    if hit is None:
+        raise NotFound(f"No {forms} filing on record")
+    return cached(hit, 1800)
+
+
+@app.get("/api/filing/{key}/{accession}")
+async def filing(key: str, accession: str, doc: str | None = None):
+    """A filing document as clean blocks, with its sections, notes and the other documents in the filing."""
+    cik = await companies.resolve(key)
+    row = await filings.find(cik, accession)
+    docs = await document.documents(cik, accession)
+    path = doc or row["doc"]
+    parsed = await document.load(cik, accession, path)
+    blocks = document.restore(parsed["blocks"])
+    secs, notes = document.sections(blocks, row["form"]) if path == row["doc"] else ([], [])
+    body = {
+        "filing": row, "documents": docs, "path": path, "url": parsed["url"], "unsupported": parsed.get("unsupported"),
+        "blocks": [["t" if b.kind == "table" else "h" if document._heading(b) else "p", b.html] for b in blocks],
+        "sections": secs, "notes": notes,
+    }
+    return cached(body, 86400)
 
 
 # Local development serves the front end from the same process; on Vercel, public/ is served by the CDN.

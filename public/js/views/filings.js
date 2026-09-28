@@ -60,7 +60,7 @@ export async function render(root, { co, key }) {
     $("rows").innerHTML = shown.map((f) => `
       <tr>
         <td class="form">${esc(f.form)}</td>
-        <td>${esc(f.name)}${f.items.length ? `<div>${f.items.filter((i) => i.code !== "9.01").map((i) => `<span class="tag">${esc(i.code)} ${esc(i.label)}</span>`).join("")}</div>` : ""}</td>
+        <td><a href="#/c/${encodeURIComponent(key)}/read/${f.accession}">${esc(f.name)}</a>${f.items.length ? `<div>${f.items.filter((i) => i.code !== "9.01").map((i) => `<span class="tag">${esc(i.code)} ${esc(i.label)}</span>`).join("")}</div>` : ""}</td>
         <td class="r">${date(f.filed)}</td>
         <td class="r">${f.period ? date(f.period) : "—"}</td>
         <td>${f.status === "Amendment" ? `<span class="tag amend">Amendment</span>` : "Original"}</td>
