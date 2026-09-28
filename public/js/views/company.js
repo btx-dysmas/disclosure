@@ -5,6 +5,7 @@ export const TABS = [
   ["filings", "Filings", () => import("./filings.js")],
   ["read", "Reader", () => import("./reader.js")],
   ["segments", "Segments", () => import("./segments.js")],
+  ["financials", "Financials", () => import("./financials.js")],
 ];
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

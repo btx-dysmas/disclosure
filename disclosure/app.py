@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from . import companies, document, filings, segments
+from . import companies, document, filings, financials, segments
 from .sec import NotFound, Upstream
 
 app = FastAPI(title="Disclosure", docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -52,6 +52,12 @@ async def latest_filing(key: str, forms: str = "10-K,10-Q,20-F,40-F"):
     if hit is None:
         raise NotFound(f"No {forms} filing on record")
     return cached(hit, 1800)
+
+
+@app.get("/api/company/{key}/financials")
+async def company_financials(key: str):
+    body = await financials.statements(await companies.resolve(key))
+    return cached({**body, "layout": financials.LAYOUT}, 21600)
 
 
 @app.get("/api/company/{key}/segments")
