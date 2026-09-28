@@ -32,6 +32,12 @@ async def search_companies(q: str):
     return cached(await companies.search(q), 3600)
 
 
+@app.get("/api/health")
+async def health():
+    """A cheap check that the function is up and routing correctly."""
+    return JSONResponse({"ok": True}, headers={"Cache-Control": "no-store"})
+
+
 @app.get("/api/latest")
 async def latest_filings(form: str = "10-K"):
     """Newest filings across EDGAR for the dashboard feed."""
