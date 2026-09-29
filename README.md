@@ -179,4 +179,4 @@ Disclosure is an educational project. It presents SEC filings as filed and is no
 ## Author
 
 **Noah Williams** (Dysmas Anastasiou)
-Email: nwfootball07@gmail.com
+Email: noah.w.williams@protonmail.com
