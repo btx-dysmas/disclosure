@@ -172,6 +172,8 @@ docs/                   architecture, decisions, development log, screenshots
 
 I started Disclosure in January 2025 as a small FastAPI service for looking up companies and their filings, alongside Intrinsic, my equity research terminal, which also uses SEC data. It grew into this because the most useful things I found in a 10-K were rarely numbers I could get from a data provider: a new risk factor, a reworded paragraph in MD&A, a segment growing faster than the rest.
 
+The commit history covers the current build.
+
 ## Disclaimer
 
 Disclosure is an educational project. It presents SEC filings as filed and is not investment advice.
