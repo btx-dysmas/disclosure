@@ -1,14 +1,12 @@
 # Development log
 
-Built from September 28, 2026 through October 2026.
-
-## The starting point
+## January 2025: the starting point
 
 The first version was a small FastAPI service: look up a company by ticker, name or accession number and return its EDGAR profile. The two pieces that stayed are the throttled EDGAR client, which keeps every request under the SEC's ten-per-second limit and sends a declared User-Agent, and the SQLite cache behind it.
 
 Accession-number lookup was the first surprise. An accession number starts with the filer agent's CIK, not the company's, so it can't be turned into a URL directly. EDGAR full-text search indexes accession numbers, so searching for one returns the company.
 
-## Library, reader, segments and statements
+## February 2025: library, reader, segments and statements
 
 **Filing library.** I added the filing library and a plain JavaScript front end. The library shows every form type with 8-K item codes translated into plain English, and filters by form group, date and keyword. Microsoft has more than 4,500 filings, so only the most recent 1,000 load at first, with the rest on request.
 
@@ -24,7 +22,7 @@ Accession-number lookup was the first surprise. An accession number starts with 
 
 After that I got tired of the project and put it down for a few months.
 
-## Summary, XBRL, search, risk factors and comparison
+## May 2025: summary, XBRL, search, risk factors and comparison
 
 **Summary.** When I came back, I added the company overview with a summary written by rules from the statements. Banks needed their own rules, since debt ratios built for industrial companies mislead for a balance sheet funded by deposits.
 
@@ -36,7 +34,7 @@ After that I got tired of the project and put it down for a few months.
 
 **Comparison.** The comparison engine aligns paragraphs by content. Short sentences like "Xbox content and services revenue increased 16%" were being paired with unrelated ones like "Azure and other cloud services revenue increased 41%", so short paragraphs now need a closer match.
 
-## Insiders, ownership, tests and deployment
+## September 2026: insiders, ownership, tests and deployment
 
 I picked the project up again after more than a year and finished the rest of it.
 
